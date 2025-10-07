@@ -22,8 +22,8 @@ const nextConfig: NextConfig = {
 	 * Set base path for GitHub Pages deployment.
 	 * Change this to your repository name if deploying to a project page.
 	 */
-	basePath: process.env.NODE_ENV === "production" ? "/Surf-rental" : "",
-	assetPrefix: process.env.NODE_ENV === "production" ? "/Surf-rental/" : "",
+	basePath: process.env.NODE_ENV === "production" ? "/surf-rental" : "",
+	assetPrefix: process.env.NODE_ENV === "production" ? "/surf-rental/" : "",
 };
 
 export default nextConfig;
