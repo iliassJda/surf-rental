@@ -181,7 +181,7 @@ export const Navbar = () => {
 											</p>
 										</div>
 									) : (
-										<div className="p-4 bg-default-50 dark:bg-default-800 rounded-lg text-center">
+										<div className="p-4 bg-default-50 dark:bg-default-100 rounded-lg text-center">
 											<p className="text-sm text-default-600">No pending withdrawals available.</p>
 										</div>
 									)}
