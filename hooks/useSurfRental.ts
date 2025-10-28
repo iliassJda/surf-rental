@@ -18,9 +18,15 @@ export function useSurfRental() {
 
 	const getContract = async (useReadOnly = false) => {
 		try {
+			console.log(process.env.NODE_ENV);
+			const rpcURL =
+				process.env.NODE_ENV === "development"
+					? process.env.NEXT_PUBLIC_RPC_URL
+					: `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`;
+
 			// Use read-only provider if wallet not connected or explicitly requested
 			if (!isConnected || useReadOnly) {
-				const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL);
+				const provider = new ethers.JsonRpcProvider(rpcURL);
 				return new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
 			}
 
