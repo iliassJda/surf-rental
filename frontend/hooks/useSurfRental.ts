@@ -16,18 +16,6 @@ export function useSurfRental() {
 		throw new Error("Ethereum provider not found");
 	};
 
-	// const getContract = async () => {
-	// 	if (!isConnected) throw new Error("Wallet not connected");
-	// 	try {
-	// 		const provider = getProvider();
-	// 		const signer = await provider.getSigner();
-	// 		return new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-	// 	} catch (err) {
-	// 		console.error("Failed to init contract", err);
-	// 		throw new Error("Failed to initialize contract");
-	// 	}
-	// };
-
 	const getContract = async (useReadOnly = false) => {
 		try {
 			// Use read-only provider if wallet not connected or explicitly requested
@@ -159,7 +147,42 @@ export function useSurfRental() {
 		}
 	};
 
+	const returnDeposit = async (board: Board, isGood: Boolean) => {
+		try {
+			const contract = await getContract();
+			const tx = await contract.returnDeposit(board.id, isGood);
+			const receipt = await tx.wait();
+			return { receipt, contract };
+		} catch (error) {
+			return { errorMessage: error };
+		}
+	};
+
+	const getPendingWithdrawals = async (address: ethers.AddressLike) => {
+		try {
+			const contract = await getContract();
+			const pending = await contract.pendingWithdrawals(address);
+			return pending;
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const withdraw = async () => {
+		try {
+			const contract = await getContract();
+			const tx = await contract.withdraw();
+			const receipt = await tx.wait();
+			return { receipt, contract };
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	return {
+		withdraw,
+		getPendingWithdrawals,
+		returnDeposit,
 		returnBoard,
 		rentBoard,
 		listBoard,

@@ -31,7 +31,7 @@ describe("Surf Rental", function () {
 			ethers.parseEther("0.05")
 		);
 		const board = await hardhatSurfRental.boards(0);
-		console.log(hardhatSurfRental.boards);
+		// console.log(hardhatSurfRental.boards);
 
 		expect(board.description).to.equal("Shortboard");
 		expect(board.available).to.equal(BoardStatus.READY);
@@ -48,8 +48,10 @@ describe("Surf Rental", function () {
 
 		await hardhatSurfRental.connect(renter).rentBoard(0, { value: ethers.parseEther("0.25") });
 		const board = await hardhatSurfRental.boards(0);
+		const ownerBalance = await hardhatSurfRental.pendingWithdrawals(owner.address);
 		expect(board.available).to.equal(BoardStatus.RENTED);
 		expect(board[6]).to.equal(renter);
+		expect(ownerBalance).to.equal(ethers.parseEther("0.2"));
 		// await hardhatSurfRental.rentBoard(0);
 	});
 
@@ -72,16 +74,18 @@ describe("Surf Rental", function () {
 		expect(board.available).to.equal(BoardStatus.RETURNED);
 
 		// Get renter's balance before deposit return
-		const balanceBeforeDeposit = await ethers.provider.getBalance(renter.address);
+		const balanceBeforeDeposit = await hardhatSurfRental.pendingWithdrawals(renter.address);
 
-		// For this test, we assume that the board was returned ok
+		// // For this test, we assume that the board was returned ok
 		await hardhatSurfRental.returnDeposit(0, true);
 
-		// Get renter's balance after deposit return
-		const balanceAfterDeposit = await ethers.provider.getBalance(renter.address);
+		// // Get renter's balance after deposit return
+		const balanceAfterDeposit = await hardhatSurfRental.pendingWithdrawals(renter.address);
 
-		// Check that the renter received the deposit (0.05 ETH)
+		// // Check that the renter received the deposit (0.05 ETH)
 		const depositReceived = balanceAfterDeposit - balanceBeforeDeposit;
+
+		// const depositReceived = await hardhatSurfRental.pendingWithdrawals(renter.address);
 		expect(depositReceived).to.equal(ethers.parseEther("0.05"));
 
 		// Check final board state
@@ -136,6 +140,33 @@ describe("Surf Rental", function () {
 		expect(boards.length).to.equal(0);
 	});
 
+	it("Should bring the balance to 0 when withdrawing", async function () {
+		const { hardhatSurfRental, renter, owner } = await loadFixture(deployFixture);
+		await hardhatSurfRental.listBoard(
+			"Longboard",
+			ethers.parseEther("0.3"),
+			ethers.parseEther("0.1")
+		);
+
+		await hardhatSurfRental.connect(renter).rentBoard(0, { value: ethers.parseEther("0.4") });
+
+		const ownerBalanceBefore = await hardhatSurfRental.pendingWithdrawals(owner.address);
+		const realBalanceBefore = await ethers.provider.getBalance(owner.address);
+
+		expect(ownerBalanceBefore).to.equal(ethers.parseEther("0.3"));
+
+		const tx = await hardhatSurfRental.withdraw();
+		const receipt = await tx.wait();
+		const gasUsed = receipt!.gasUsed * receipt!.gasPrice;
+
+		const ownerBalanceAfter = await hardhatSurfRental.pendingWithdrawals(owner.address);
+		const realBalanceAfter = await ethers.provider.getBalance(owner.address);
+
+		// const netGain = realBalanceAfter - realBalanceBefore + gasUsed;
+		expect(ownerBalanceAfter).to.equal(ethers.parseEther("0"));
+		// expect(netGain).to.equal(ethers.parseEther("0.3"));
+	});
+
 	it("Should give deposit to owner when board is damaged", async function () {
 		const { hardhatSurfRental, renter, owner } = await loadFixture(deployFixture);
 
@@ -149,18 +180,24 @@ describe("Surf Rental", function () {
 		await hardhatSurfRental.connect(renter).returnBoard(0);
 
 		// Get owner's balance before deposit decision
-		const ownerBalanceBefore = await ethers.provider.getBalance(owner.address);
+		// const ownerBalanceBefore = await ethers.provider.getBalance(owner.address);
+		const ownerBalanceBefore = await hardhatSurfRental.pendingWithdrawals(owner.address);
+		// console.log("BEFORE: ", ownerBalanceBefore);
 
 		// Board is damaged, so owner keeps the deposit
-		const tx = await hardhatSurfRental.returnDeposit(0, false);
-		const receipt = await tx.wait();
-		const gasUsed = receipt!.gasUsed * receipt!.gasPrice;
+		await hardhatSurfRental.returnDeposit(0, false);
+		// const receipt = await tx.wait();
+		// const gasUsed = receipt!.gasUsed * receipt!.gasPrice;
 
 		// Get owner's balance after deposit decision
-		const ownerBalanceAfter = await ethers.provider.getBalance(owner.address);
+		// const ownerBalanceAfter = await ethers.provider.getBalance(owner.address);
+		const ownerBalanceAfter = await hardhatSurfRental.pendingWithdrawals(owner.address);
+		// console.log("AFTER: ", ownerBalanceAfter);
 
 		// Owner should receive deposit minus gas costs
-		const netGain = ownerBalanceAfter - ownerBalanceBefore + gasUsed;
+		// const netGain = ownerBalanceAfter - ownerBalanceBefore + gasUsed;
+		const netGain = ownerBalanceAfter - ownerBalanceBefore;
+		// console.log("THis is the gain", netGain, " And it should return: ", ethers.parseEther("0.1"));
 		expect(netGain).to.equal(ethers.parseEther("0.1"));
 
 		// Check final board state

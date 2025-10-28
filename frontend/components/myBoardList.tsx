@@ -284,7 +284,7 @@ export default function MyBoardList() {
 								{selectedBoard && (
 									<div className="space-y-6">
 										{/* Board Information Card */}
-										<div className="bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20 p-6 rounded-xl border border-primary-200 dark:border-primary-800">
+										<div className="bg-gradient-to-r from-primary-200 to-secondary-200 p-6 rounded-lg ">
 											<div className="flex items-start justify-between mb-4">
 												<div>
 													<h3 className="text-xl font-bold text-foreground mb-1">
@@ -305,7 +305,7 @@ export default function MyBoardList() {
 										</div>
 
 										{/* Deposit Information */}
-										<div className="bg-default-50 dark:bg-default-900/50 p-6 rounded-xl space-y-4">
+										<div className="bg-default-100 p-6 rounded-xl space-y-4">
 											<div className="flex items-center gap-3 mb-4">
 												{/* <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/50 rounded-full flex items-center justify-center">
 													<svg
@@ -331,7 +331,7 @@ export default function MyBoardList() {
 											</div>
 
 											<div className="grid grid-cols-2 gap-4">
-												<div className="bg-white dark:bg-default-800 p-4 rounded-lg border border-default-200 dark:border-default-700">
+												<div className="p-4 rounded-lg border border-default-200">
 													<p className="text-xs uppercase tracking-wide text-default-500 mb-1">
 														Daily Rate
 													</p>
@@ -339,8 +339,8 @@ export default function MyBoardList() {
 														{selectedBoard.pricePerDay} ETH
 													</p>
 												</div>
-												<div className="bg-white dark:bg-default-800 p-4 rounded-lg border border-default-200 dark:border-default-700">
-													<p className="text-xs uppercase tracking-wide text-default-500 mb-1">
+												<div className="dark:bg-default-900 p-4 rounded-lg border border-default-200 dark:border-default-700">
+													<p className="text-xs uppercase tracking-wide text-default-500 dark:text-default-300 mb-1">
 														Security Deposit
 													</p>
 													<p className="text-lg font-bold text-primary">
@@ -351,7 +351,7 @@ export default function MyBoardList() {
 										</div>
 
 										{/* Return Process Information */}
-										<div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-xl p-4">
+										<div className="bg-warning-50 border border-warning-200 rounded-xl p-4">
 											<div className="flex items-start gap-3">
 												{/* <div className="w-6 h-6 bg-warning-100 dark:bg-warning-900/50 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
 													<svg
@@ -367,7 +367,7 @@ export default function MyBoardList() {
 													</svg>
 												</div> */}
 												<div>
-													<h5 className="font-semibold text-warning-800 dark:text-warning-200 mb-1">
+													<h5 className="font-semibold text-warning-800 dark:text-warning-400 mb-1">
 														Deposit Return Policy
 													</h5>
 													<p className="text-sm text-warning-700 dark:text-warning-300">

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { Board } from "@/config/site";
 import { useSurfRental } from "@/hooks/useSurfRental";
 import { useRouter } from "next/navigation";
+import { ethers } from "ethers";
 // import { useRouter } from "next/router";
 
 export default function ListRent() {
@@ -51,6 +52,10 @@ export default function ListRent() {
 				selectedBoard.pricePerDay.toString(),
 				selectedBoard.deposit.toString()
 			);
+
+			// const ownerPending = await getPendingWithdrawals(selectedBoard.owner);
+			// console.log(ethers.parseEther(ownerPending));
+			// addToast(ownerPending);
 
 			// Update Supabase to mark as rented
 			const { error: updateError } = await supabase

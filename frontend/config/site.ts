@@ -27,6 +27,10 @@ export const siteConfig = {
 			label: "My Rentings",
 			href: "/my-rentings",
 		},
+		{
+			label: "Returnals",
+			href: "/returnals",
+		},
 	],
 	// navMenuItems: [
 	// 	{
