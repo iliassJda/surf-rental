@@ -1,6 +1,5 @@
 node_modules
 .env.*
-/out
 .next
 # Hardhat files
 /cache
