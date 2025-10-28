@@ -6,7 +6,7 @@ const sourcePath = path.resolve(
 	__dirname,
 	`../artifacts/contracts/${contractName}.sol/${contractName}.json`
 );
-const destPath = path.resolve(__dirname, `../frontend/abi/${contractName}.json`);
+const destPath = path.resolve(`./abi/${contractName}.json`);
 
 fs.copyFileSync(sourcePath, destPath);
 console.log(`✅ Copied ${contractName} ABI to frontend`);
